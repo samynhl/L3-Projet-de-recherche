@@ -29,6 +29,12 @@ tasks = {"ri":[0,0,1,2],
         "di" :[1,3,5,6],
         "pi" :[1,2,3,3]}
 
+m = 3
+tasks = {"ri":[0,0,1],
+        "di" :[1,3,6],
+        "pi" :[1,2,3]}
+
+
 def main():
     nodes_list = []
     intervals__values = list(dict.fromkeys(tasks["ri"] + tasks["di"]))
@@ -39,9 +45,9 @@ def main():
     for t in range(nb_tasks):
         for k in range(len(intervals_list)):
             it = intervals_list[k]
-        long_int = it[1]-it[0]
-        if (tasks["ri"][t]<=it[0] and tasks["di"][t]>=it[1]):
-            nodes_list.append(((str(t+1), "I"+str(k+1), dict(capacity=long_int))))
+            long_int = it[1]-it[0]
+            if (tasks["ri"][t]<=it[0] and tasks["di"][t]>=it[1]):
+                nodes_list.append(((str(t+1), "I"+str(k+1), dict(capacity=long_int))))
     for k in range(len(intervals_list)):
         it = intervals_list[k]
         long_int = it[1]-it[0]
