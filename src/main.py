@@ -18,6 +18,11 @@ def createIntervals(intervals_list):
     print("Resulting intervals : " + str(res))
     return res
 
+def generer_exemple(n, alpha, beta):
+    pi = np.random.randint(1,10)
+    alpha, beta = np.random.rand(1), np.random.rand(1)
+    pass
+
 # Initialisations
 m = 2
 tasks = {"ri": [0, 0, 1],
