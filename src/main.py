@@ -2,26 +2,9 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import numpy as np
 from networkx.classes.function import nodes
+import util as ut
 
 
-def createIntervals(intervals_list):
-    # Returns a list of intervalls that will help build the flow
-
-    # printing original list
-    intervals_list.sort()
-    print("The original list : " + str(intervals_list))
-
-    res = []
-    for i in range(len(intervals_list)-1):
-        res.append((intervals_list[i], intervals_list[i+1]))
-    # printing result
-    print("Resulting intervals : " + str(res))
-    return res
-
-def generer_exemple(n, alpha, beta):
-    pi = np.random.randint(1,10)
-    alpha, beta = np.random.rand(1), np.random.rand(1)
-    pass
 
 # Initialisations
 m = 2
@@ -34,11 +17,21 @@ tasks = {"ri":[0,0,1,2],
         "di" :[1,3,5,6],
         "pi" :[1,2,3,3]}
 
+tasks = {"ri":[],
+        "di" :[],
+        "pi" :[]}
+n,m = 10, 3
+alpha, beta = np.random.rand(), np.random.rand()
+ri, qi, pi = ut.generer_exemple(n,m, alpha, beta)
+
+zipped_lists = zip(ri, qi, pi)
+a = [x+y+z for (x,y,z) in zipped_lists]
+C = max(a)
 
 def main():
     nodes_list = []
     intervals__values = list(dict.fromkeys(tasks["ri"] + tasks["di"]))
-    intervals_list = createIntervals(intervals__values)
+    intervals_list = ut.createIntervals(intervals__values)
     nb_tasks = len(tasks["ri"])
     for t in range(nb_tasks):
         nodes_list.append((('s', str(t+1), dict(capacity=tasks["pi"][t]))))
