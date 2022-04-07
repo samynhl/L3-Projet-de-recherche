@@ -1,4 +1,3 @@
-from tkinter import E
 import numpy as np
 import random
 
@@ -34,8 +33,4 @@ def generer_exemple(n,m, alpha, beta):
     except Exception:
         print("Une exception a été levée")
         exit
-    
-
-    # flow_value, flows = nx.maximum_flow(G, 's', 'p',flow_func=edmonds_karp)
-
 

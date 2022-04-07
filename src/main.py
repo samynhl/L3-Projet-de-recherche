@@ -25,8 +25,7 @@ def init(n=10,m=3):
     alpha, beta =0,0
     while (alpha==0 or beta==0): alpha, beta = random.random(), random.random()
     ri, qi, pi = ut.generer_exemple(n,m, alpha, beta)
-    a = [x+y+z for (x,y,z) in zip(ri, qi, pi)]
-    C = max(a)
+    C = max([x+y+z for (x,y,z) in zip(ri, qi, pi)])
     di = [C - x for x in qi]
     print("di ",di)
     tasks = {"ri":ri,"di" :di,"pi" :pi,"qi":qi}
@@ -108,7 +107,7 @@ def main():
             G.add_edge("I"+str(k+1), "p",weight=0, capacity=m*long_int)
 
         # Jackson heuristique 
-        jackson_heur(G,tasks)
+        # jackson_heur(G,tasks)
         # Résolution du flot maximum
         flow_value, flows = nx.maximum_flow(G, 's', 'p',flow_func=edmonds_karp)
         duree_total = sum(tasks["pi"])
@@ -123,6 +122,16 @@ def main():
         print(f'maximum flow: {flow_value}')
         print("la réponse au problème de décision : {}".format('Oui' if check else 'Non'))
 
+        # Sauvegarde du résultat dans le fichier de sortie
+        with open("exemples.txt","a") as f:
+            f.write("C={}, n={}, m={}\n".format(C,n,m))
+            f.write("ri={}\n".format(tasks["ri"]))
+            f.write("di={}\n".format(tasks["di"]))
+            f.write("qi={}\n".format(tasks["qi"]))
+            f.write("pi={}\n".format(tasks["pi"]))
+            f.write("Probleme de decision : {}\n".format('Oui' if check else 'Non'))
+            f.write("-----------------------------------------------------------------------------\n")
+        
         if check: 
             bsup = C
             Copt = C

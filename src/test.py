@@ -110,11 +110,3 @@ def main():
     # Affichage graphique du graphe obtenu
     # plot_graph(G)
 main()
-
-
-
-'''
-tasks = {"ri":[0,1,3,2,2,1],
-         "di" :[2,2,6,3,6,3],
-         "pi" :[1,1,2,1,2,1]}
-'''
