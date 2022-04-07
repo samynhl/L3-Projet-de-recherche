@@ -1,8 +1,6 @@
 from tkinter import E
-import networkx as nx
-import matplotlib.pyplot as plt
 import numpy as np
-from networkx.classes.function import nodes
+import random
 
 def createIntervals(intervals_list):
     # Returns a list of intervalls that will help build the flow
@@ -20,20 +18,24 @@ def createIntervals(intervals_list):
 
 def generer_exemple(n,m, alpha, beta):
     try:
-        pi = [np.random.randint(1,10) for i in range(n)]
-        print(pi)
-        somme = (alpha*sum(pi))//m
-        ri = [np.random.randint(0,somme) for i in range(n)]
-        somme = (beta*sum(pi))//m # Probleme si division entière donne 0
-        qi = [np.random.randint(0,somme) for i in range(n)]
+        somme1, somme2=0,0
+        while (somme1==0 or somme2==0):
+            alpha, beta = random.random(), random.random()
+            pi = [np.random.randint(1,10) for i in range(n)]
+            somme1 = (alpha*sum(pi))//m
+            somme2 = (beta*sum(pi))//m
+        ri = [np.random.randint(0,somme1) for i in range(n)]
+        qi = [np.random.randint(0,somme2) for i in range(n)]
         # Affichage
-        print("ri",ri)
-        print("qi",qi)
-        print("pi",pi)
-
+        print("ri ",ri)
+        print("qi ",qi)
+        print("pi ",pi)
         return ri, qi, pi
-
     except Exception:
-        print(somme)
+        print("Une exception a été levée")
         exit
+    
+
+    # flow_value, flows = nx.maximum_flow(G, 's', 'p',flow_func=edmonds_karp)
+
 
