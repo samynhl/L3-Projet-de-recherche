@@ -3,7 +3,9 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
 import math
+import time
 from networkx.classes.function import nodes
+from networkx.algorithms.flow import build_residual_network
 from networkx.algorithms.flow import maximum_flow
 from networkx.algorithms.flow import edmonds_karp
 from networkx.algorithms.flow import shortest_augmenting_path
@@ -15,9 +17,8 @@ from networkx.algorithms.flow import gomory_hu_tree
 import util as ut
 import random
 
-ALGORITHMES = ['maximum_flow','edmonds_karp','shortest_augmenting_path',
-             'preflow_push','dinitz','boykov_kolmogorov','gomory_hu_tree']
-
+algo_names = ['edmonds_karp','shortest_augmenting_path','preflow_push','dinitz','boykov_kolmogorov']
+ALGORITHMES = [edmonds_karp,shortest_augmenting_path,preflow_push,dinitz,boykov_kolmogorov]
 
 # Initialisations
 def init(n=10,m=3):
@@ -28,15 +29,17 @@ def init(n=10,m=3):
     a = [x+y+z for (x,y,z) in zip(ri, qi, pi)]
     C = max(a)
     di = [C - x for x in qi]
-    print("di ",di)
     tasks = {"ri":ri,"di" :di,"pi" :pi}
     return tasks
 
 # Affichage du graphe construit
-def affichage(G):
-    weights,caps = nx.get_edge_attributes(G, 'weight'),nx.get_edge_attributes(G, 'capacity')
-    for u,v in G.edges:
-        print(f'({u}, {v}): {weights[u,v]}/{caps[(u, v)]}')
+def affichage(A,r=0):
+    weights,caps = nx.get_edge_attributes(A, 'weight'),nx.get_edge_attributes(A, 'capacity')
+    for u,v in A.edges:
+        if r:
+            print(f'({u}, {v}): {caps[(u, v)]}')
+        else: 
+            print(f'({u}, {v}): {weights[u,v]}/{caps[(u, v)]}')
     print("---")
 
 def plot_graph(G):
@@ -68,45 +71,65 @@ def jackson_heur(G,tasks):
             G.add_edge(itmax, 'p', weight=w3,capacity=cp3)
 
 def main():
-    n,m=10,3
-    tasks = init(n,m)
-    intervals__values = list(dict.fromkeys(tasks["ri"] + tasks["di"]))
-    intervals_list = ut.createIntervals(intervals__values)
-    nb_tasks = len(tasks["ri"])
+    n,m=20,5
+    nb_test = 1000
+    for algo in ALGORITHMES:
+        nb_oui, nb_non = 0,0
+        duree = 0
+        for i in range(nb_test):
+            tasks = init(n,m)
+            intervals__values = list(dict.fromkeys(tasks["ri"] + tasks["di"]))
+            intervals_list = ut.createIntervals(intervals__values)
+            nb_tasks = len(tasks["ri"])
 
-    # Construction du graphe
-    G = nx.DiGraph()
-    for t in range(nb_tasks):
-        G.add_edge('s', str(t+1), weight=0,capacity=tasks["pi"][t])
-    for t in range(nb_tasks):
-        for k in range(len(intervals_list)):
-            it = intervals_list[k]
-            long_int = it[1]-it[0]
-            if (tasks["ri"][t]<=it[0] and tasks["di"][t]>=it[1]):
-                G.add_edge(str(t+1), "I"+str(k+1), weight=0,capacity=long_int)
-    for k in range(len(intervals_list)):
-        it = intervals_list[k]
-        long_int = it[1]-it[0]
-        G.add_edge("I"+str(k+1), "p",weight=0, capacity=m*long_int)
-    
-    # Jackson heuristique 
-    affichage(G)
-    jackson_heur(G,tasks)
-    affichage(G)
-    # Résolution du flot maximum
-    flow_value, flows = nx.maximum_flow(G, 's', 'p',flow_func=edmonds_karp)
-    duree_total = sum(tasks["pi"])
-    # Affichage du flot après résolution du flot maximum
-    caps = nx.get_edge_attributes(G, 'capacity')
-    for u in nx.topological_sort(G):
-        for v, flow in sorted(flows[u].items()):
-            print(f'({u}, {v}): {flow}/{caps[(u, v)]}')
+            # Construction du graphe
+            G = nx.DiGraph()
+            for t in range(nb_tasks):
+                G.add_edge('s', str(t+1), weight=0,capacity=tasks["pi"][t])
+            for t in range(nb_tasks):
+                for k in range(len(intervals_list)):
+                    it = intervals_list[k]
+                    long_int = it[1]-it[0]
+                    if (tasks["ri"][t]<=it[0] and tasks["di"][t]>=it[1]):
+                        G.add_edge(str(t+1), "I"+str(k+1), weight=0,capacity=long_int)
+            for k in range(len(intervals_list)):
+                it = intervals_list[k]
+                long_int = it[1]-it[0]
+                G.add_edge("I"+str(k+1), "p",weight=0, capacity=m*long_int)
+            
+            # affichage(G)
+            # Jackson heuristique
+            
+            #jackson_heur(G,tasks)
+            #weights,caps = nx.get_edge_attributes(G, 'weight'),nx.get_edge_attributes(G, 'capacity')
+            
+            R = build_residual_network(G, 'capacity')
+            #affichage(G)
+            tic = time.time()
+            # Résolution du flot maximum
+            flow_value, flows = nx.maximum_flow(G, 's', 'p',flow_func=algo,residual=R)
+            duree_total = sum(tasks["pi"])
+            '''
+            # Affichage du flot après résolution du flot maximum
+            caps = nx.get_edge_attributes(G, 'capacity')
+            for u in nx.topological_sort(G):
+                for v, flow in sorted(flows[u].items()):
+                    print(f'({u}, {v}): {flow}/{caps[(u, v)]}')
+            '''
+            check = (duree_total<=flow_value)
+            '''
+            print("-------------------------------------------------------------------------")
+            print(f'maximum flow: {flow_value}')
+            print("la réponse au problème de décision : {}".format('Oui' if check else 'Non'))
+            '''
+            nb_oui+=1 if check else 0
+            nb_non+=1 if not check else 0
 
-    check = (duree_total<=flow_value)
-    print("-------------------------------------------------------------------------")
-    print(f'maximum flow: {flow_value}')
-    print("la réponse au problème de décision : {}".format('Oui' if check else 'Non'))
-    
+            duree += time.time()-tic
+
+        print("Pourcentage de réponses oui : ",round(nb_oui/nb_test,2))
+        print("Pourcentage de réponses non : ",round(nb_non/nb_test,2))
+        print(f'Algo : {str(algo)} - Exécuté en {round(duree,2)} ')
     # Affichage graphique du graphe obtenu
     # plot_graph(G)
 main()
