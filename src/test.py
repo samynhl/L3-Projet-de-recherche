@@ -71,8 +71,8 @@ def jackson_heur(G,tasks):
             G.add_edge(itmax, 'p', weight=w3,capacity=cp3)
 
 def main():
-    n,m=20,5
-    nb_test = 1000
+    n,m = 20,5
+    nb_test = 3000
     for algo in ALGORITHMES:
         nb_oui, nb_non = 0,0
         duree = 0
@@ -100,7 +100,7 @@ def main():
             # affichage(G)
             # Jackson heuristique
             
-            #jackson_heur(G,tasks)
+            jackson_heur(G,tasks)
             #weights,caps = nx.get_edge_attributes(G, 'weight'),nx.get_edge_attributes(G, 'capacity')
             
             R = build_residual_network(G, 'capacity')
@@ -129,7 +129,8 @@ def main():
 
         print("Pourcentage de réponses oui : ",round(nb_oui/nb_test,2))
         print("Pourcentage de réponses non : ",round(nb_non/nb_test,2))
-        print(f'Algo : {str(algo)} - Exécuté en {round(duree,2)} ')
+        print(f'Algo : {algo_names[ALGORITHMES.index(algo)]} - Exécuté en {round(duree,2)} ')
+        print("---")
     # Affichage graphique du graphe obtenu
     # plot_graph(G)
 main()
