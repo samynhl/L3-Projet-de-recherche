@@ -20,64 +20,15 @@ import random
 algo_names = ['edmonds_karp','shortest_augmenting_path','preflow_push','dinitz','boykov_kolmogorov']
 ALGORITHMES = [edmonds_karp,shortest_augmenting_path,preflow_push,dinitz,boykov_kolmogorov]
 
-# Initialisations
-def init(n=10,m=3):
-    tasks = {"ri":[],"di" :[],"pi" :[]}
-    alpha, beta =0,0
-    while (alpha==0 or beta==0): alpha, beta = random.random(), random.random()
-    ri, qi, pi = ut.generer_exemple(n,m, alpha, beta)
-    a = [x+y+z for (x,y,z) in zip(ri, qi, pi)]
-    C = max(a)
-    di = [C - x for x in qi]
-    tasks = {"ri":ri,"di" :di,"pi" :pi}
-    return tasks
-
-# Affichage du graphe construit
-def affichage(A,r=0):
-    weights,caps = nx.get_edge_attributes(A, 'weight'),nx.get_edge_attributes(A, 'capacity')
-    for u,v in A.edges:
-        if r:
-            print(f'({u}, {v}): {caps[(u, v)]}')
-        else: 
-            print(f'({u}, {v}): {weights[u,v]}/{caps[(u, v)]}')
-    print("---")
-
-def plot_graph(G):
-    pos=nx.spring_layout(G)
-    nx.draw(G, with_labels=True, font_weight='bold')
-    plt.show()
-
-def jackson_heur(G,tasks):
-    # Jackson heuristique 
-    dico = {}
-    for n in G.nodes: dico[n] = list(G.successors(n))
-    sorted_ddl = np.argsort(tasks["di"])
-    for i in sorted_ddl:
-        # Lire les poids et capacités des arcs
-        weights,caps = nx.get_edge_attributes(G, 'weight'),nx.get_edge_attributes(G, 'capacity')
-        pi = tasks['pi'][i]
-        its = dico[str(i+1)]
-        itmax,vmax= '',0
-        # Selectionner l'intervalle le plus long
-        for it in its:
-            v = caps[str(i+1), it]-weights[str(i+1), it]
-            if v>vmax: vmax,itmax = v,it
-        v = min(vmax,pi,caps['s', str(i+1)]-weights['s', str(i+1)],caps[itmax, 'p']-weights[itmax, 'p'])
-        if v!=0:
-            w1,w2,w3 = weights['s', str(i+1)]+v,weights[str(i+1), itmax]+v,weights[itmax, 'p']+v
-            cp1, cp2, cp3 = caps['s', str(i+1)],caps[str(i+1), itmax],caps[itmax, 'p']
-            G.add_edge('s', str(i+1), weight=w1,capacity=cp1)
-            G.add_edge(str(i+1), itmax, weight=w2,capacity=cp2)
-            G.add_edge(itmax, 'p', weight=w3,capacity=cp3)
 
 def main():
     n,m = 20,5
-    nb_test = 3000
+    nb_test = 1000
     for algo in ALGORITHMES:
         nb_oui, nb_non = 0,0
         duree = 0
         for i in range(nb_test):
-            tasks = init(n,m)
+            tasks = ut.init(n,m)
             intervals__values = list(dict.fromkeys(tasks["ri"] + tasks["di"]))
             intervals_list = ut.createIntervals(intervals__values)
             nb_tasks = len(tasks["ri"])
@@ -97,10 +48,10 @@ def main():
                 long_int = it[1]-it[0]
                 G.add_edge("I"+str(k+1), "p",weight=0, capacity=m*long_int)
             
-            # affichage(G)
+            # ut.affichage(G)
             # Jackson heuristique
             
-            jackson_heur(G,tasks)
+            G = ut.jackson_heur(G,tasks)
             #weights,caps = nx.get_edge_attributes(G, 'weight'),nx.get_edge_attributes(G, 'capacity')
             
             R = build_residual_network(G, 'capacity')
@@ -127,8 +78,8 @@ def main():
 
             duree += time.time()-tic
 
-        print("Pourcentage de réponses oui : ",round(nb_oui/nb_test,2))
-        print("Pourcentage de réponses non : ",round(nb_non/nb_test,2))
+        print("Taux de réponses oui : ",round(nb_oui/nb_test,2))
+        print("Taux de réponses non : ",round(nb_non/nb_test,2))
         print(f'Algo : {algo_names[ALGORITHMES.index(algo)]} - Exécuté en {round(duree,2)} ')
         print("---")
     # Affichage graphique du graphe obtenu

@@ -1,5 +1,9 @@
 import numpy as np
 import random
+import networkx as nx
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+import math
 
 def createIntervals(intervals_list):
     # Returns a list of intervalls that will help build the flow
@@ -28,4 +32,55 @@ def generer_exemple(n,m, alpha, beta,verbose=False):
     except Exception:
         print("Une exception a été levée")
         exit
+
+# Initialisations
+def init(n=10,m=3):
+    tasks = {"ri":[],"di" :[],"pi" :[]}
+    alpha, beta =0,0
+    while (alpha==0 or beta==0): alpha, beta = random.random(), random.random()
+    ri, qi, pi = generer_exemple(n,m, alpha, beta)
+    a = [x+y+z for (x,y,z) in zip(ri, qi, pi)]
+    C = max(a)
+    di = [C - x for x in qi]
+    tasks = {"ri":ri,"di" :di,"pi" :pi,"qi":qi}
+    return tasks
+
+# Affichage du graphe construit
+def affichage(A,r=0):
+    weights,caps = nx.get_edge_attributes(A, 'weight'),nx.get_edge_attributes(A, 'capacity')
+    for u,v in A.edges:
+        if r:
+            print(f'({u}, {v}): {caps[(u, v)]}')
+        else: 
+            print(f'({u}, {v}): {weights[u,v]}/{caps[(u, v)]}')
+    print("---")
+
+def plot_graph(G):
+    pos=nx.spring_layout(G)
+    nx.draw(G, with_labels=True, font_weight='bold')
+    plt.show()
+
+def jackson_heur(G,tasks):
+    # Jackson heuristique 
+    dico = {}
+    for n in G.nodes: dico[n] = list(G.successors(n))
+    sorted_ddl = np.argsort(tasks["di"])
+    for i in sorted_ddl:
+        # Lire les poids et capacités des arcs
+        weights,caps = nx.get_edge_attributes(G, 'weight'),nx.get_edge_attributes(G, 'capacity')
+        pi = tasks['pi'][i]
+        its = dico[str(i+1)]
+        itmax,vmax= '',0
+        # Selectionner l'intervalle le plus long
+        for it in its:
+            v = caps[str(i+1), it]-weights[str(i+1), it]
+            if v>vmax: vmax,itmax = v,it
+        v = min(vmax,pi,caps['s', str(i+1)]-weights['s', str(i+1)],caps[itmax, 'p']-weights[itmax, 'p'])
+        if v!=0:
+            w1,w2,w3 = weights['s', str(i+1)]+v,weights[str(i+1), itmax]+v,weights[itmax, 'p']+v
+            cp1, cp2, cp3 = caps['s', str(i+1)],caps[str(i+1), itmax],caps[itmax, 'p']
+            G.add_edge('s', str(i+1), weight=w1,capacity=cp1)
+            G.add_edge(str(i+1), itmax, weight=w2,capacity=cp2)
+            G.add_edge(itmax, 'p', weight=w3,capacity=cp3)
+    return G
 
