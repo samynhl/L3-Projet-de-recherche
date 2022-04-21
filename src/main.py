@@ -14,28 +14,30 @@ from networkx.algorithms.flow import gomory_hu_tree
 
 import util as ut
 import random
+import time
 
 def main():
     # Initialisations
-    n, m = 5000,50
+    n = 10000        # Nombre de taches
+    m = int(n*0.1)   # Nombre de machines
     tasks = ut.init(n,m)
     C = max([x+y+z for (x,y,z) in zip(tasks["ri"], tasks["qi"], tasks["pi"])])
     intervals__values = list(dict.fromkeys(tasks["ri"] + tasks["di"]))
     intervals_list = ut.createIntervals(intervals__values)
-    nb_tasks = len(tasks["ri"])
 
     # Problème d'optimisation
     # Réflexion sur la manière de générer les bornes
-    binf = int(sum(tasks["pi"])/m)
-    bsup = max([2*x+2*y+2*z for (x,y,z) in zip(tasks["ri"], tasks["qi"], tasks["pi"])])
-     
-    
+    binf = max(int(sum(tasks["pi"])/m+1),max([x+y+z for (x,y,z) in zip(tasks["qi"], tasks["pi"], tasks["ri"])]))
+    bsup = sum(tasks["pi"])
+    C = int((binf+bsup)//2)
+
     nb_iterations = 0
+    tic = time.time()
     while(True):
         nb_iterations+=1
-        print("C : ", C)
         print("binf : ", binf)
         print("bsup : ", bsup)
+        print("C : ", C)
         nodes_list = []
         intervals__values = list(dict.fromkeys(tasks["ri"] + tasks["di"]))
         intervals_list = ut.createIntervals(intervals__values)
@@ -88,14 +90,15 @@ def main():
             Copt = C
         else: binf = C
         # Condition d'arret
-        if bsup-binf<5: break
+        if bsup-binf<2: break
 
         C = int((binf+bsup)//2)
 
         di = [C - x for x in tasks["qi"]]
         tasks["di"] = di
-    print("\n----")
+    print(f'n= {n}, m= {m}')
     print("la valeur de C optimal: ", Copt)
     print("Trouvé en {} itérations".format(nb_iterations))
+    print("Temps d'exécution : ",round(time.time()-tic,2))
 
 main()

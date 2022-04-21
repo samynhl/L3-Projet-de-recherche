@@ -26,8 +26,8 @@ def main():
     nb_test = 100
     exec_time = []
     valeurs_n = []
-    for n in range(100, 500, 100):
-        m = n//10
+    for n in range(100, 700, 100):
+        m = int(n*0.1)
         nb_oui, nb_non = 0,0
         duree = 0
         for i in range(nb_test):
@@ -87,6 +87,15 @@ def main():
         print("Taux de réponses non : ",round(nb_non/nb_test,2))
         print(f'Algo : shortest augmenting path - Exécuté en {round(duree,2)} ')
         print("---")
+
+        with open('trace.txt','a') as f:
+            f.write(f'n= {n}, m= {m}\n')
+            f.write(f'Taux de réponses oui : {round(nb_oui/nb_test,2)}\n')
+            f.write(f'Taux de réponses non : {round(nb_non/nb_test,2)}\n')
+            f.write(f'Algo : shortest augmenting path - Exécuté en {round(duree,2)}\n')
+            f.write("---\n")
+
+
     plt.plot(valeurs_n,exec_time)
     # Affichage graphique du graphe obtenu
     # plot_graph(G)
