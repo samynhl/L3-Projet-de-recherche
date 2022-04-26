@@ -1,0 +1,30 @@
+n= 100, m= 10
+Taux de reponses oui : 0.55
+Taux de reponses non : 0.45
+Algo : shortest augmenting path - Execute en 3.92
+---
+n= 300, m= 30
+Taux de reponses oui : 0.59
+Taux de reponses non : 0.41
+Algo : shortest augmenting path - Execute en 14.23
+---
+n= 500, m= 50
+Taux de reponses oui : 0.5
+Taux de reponses non : 0.5
+Algo : shortest augmenting path - Execute en 14.98
+---
+n= 700, m= 70
+Taux de reponses oui : 0.58
+Taux de reponses non : 0.42
+Algo : shortest augmenting path - Execute en 17.46
+---
+n= 900, m= 90
+Taux de reponses oui : 0.58
+Taux de reponses non : 0.42
+Algo : shortest augmenting path - Execute en 21.0
+---
+n= 1100, m= 110
+Taux de reponses oui : 0.63
+Taux de reponses non : 0.37
+Algo : shortest augmenting path - Execute en 18.42
+---

@@ -20,7 +20,10 @@ import random
 algo_names = ['edmonds_karp','shortest_augmenting_path','preflow_push','dinitz','boykov_kolmogorov']
 ALGORITHMES = [edmonds_karp,shortest_augmenting_path,preflow_push,dinitz,boykov_kolmogorov]
 
-
+# Générer exemples
+# for n in range(100, 2000, 200):
+#        ut.générer_instances(n)
+# return
 def main():
     n,m = 20,5
     nb_test = 100

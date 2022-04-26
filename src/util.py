@@ -84,3 +84,39 @@ def jackson_heur(G,tasks):
             G.add_edge(itmax, 'p', weight=w3,capacity=cp3)
     return G
 
+def générer_instances(n):
+    # Génère 100 instances de tests de taille n taches chacun
+    # Sauvegarde les résultats dans un fichier de sortie
+    def write_example(tasks):
+        with open('instances.txt','a') as f:
+            f.write(f"{n}\n")
+            f.write(f"{tasks['ri']}\n")
+            f.write(f"{tasks['pi']}\n")
+            f.write(f"{tasks['qi']}\n")
+            f.write(f"{tasks['di']}\n")
+            f.write(f"---\n")
+    m = int(n*0.1) 
+    for i in range(100):
+        tasks = init(n,m)
+        write_example(tasks)
+    
+def read_example(f):
+    def parser(l):
+        res = []
+        for e in l:
+            res.append(int(e))
+        return res
+    l = ''
+    tasks = {'ri':[],'pi':[],'qi':[],'di':[]}
+    exemples = []
+    n = 0
+    while True:
+        l = f.readline()
+        if l=='---\n': break
+        exemples.append(l)
+    n = int(exemples[0])
+    tasks['ri'] = parser(exemples[1][1:-2].split(','))
+    tasks['pi'] = parser(exemples[2][1:-2].split(','))
+    tasks['qi'] = parser(exemples[3][1:-2].split(','))
+    tasks['di'] = parser(exemples[4][1:-2].split(','))
+    return n,tasks
