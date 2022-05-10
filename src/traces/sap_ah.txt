@@ -1,7 +1,7 @@
 n= 100, m= 10
 Taux de reponses oui : 0.55
 Taux de reponses non : 0.45
-Algo : shortest augmenting path - Execute en 3.92
+Algo : shortest augmenting path - Execute en 3.92,14.23,14.98,17.46,21.0,18.42
 ---
 n= 300, m= 30
 Taux de reponses oui : 0.59

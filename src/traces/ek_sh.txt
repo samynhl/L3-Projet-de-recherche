@@ -1,0 +1,22 @@
+n= 100, m= 10
+Taux de reponses oui : 0.55
+Taux de reponses non : 0.45
+Algo : edmonds_karp - Execute en 7.55
+---
+n= 300, m= 30
+Taux de reponses oui : 0.59
+Taux de reponses non : 0.41
+Algo : edmonds_karp - Execute en 67.0
+---
+n= 500, m= 50
+Taux de reponses oui : 0.5
+Taux de reponses non : 0.5
+Algo : edmonds_karp - Execute en 190.16
+---
+n= 700, m= 70
+Taux de reponses oui : 0.58
+Taux de reponses non : 0.42
+Algo : edmonds_karp - Execute en 436.75
+---
+[100, 300, 500, 700]
+[7.546902656555176, 67.00274348258972, 190.16315817832947, 436.7474398612976]

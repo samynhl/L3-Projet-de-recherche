@@ -1,0 +1,27 @@
+n= 100, m= 10
+Taux de reponses oui : 0.55
+Taux de reponses non : 0.45
+Algo : shortest_augmenting_path - Execute en 1.85
+---
+n= 100, m= 10
+Taux de reponses oui : 0.55
+Taux de reponses non : 0.45
+Algo : shortest_augmenting_path - Execute en 1.84
+---
+n= 300, m= 30
+Taux de reponses oui : 0.59
+Taux de reponses non : 0.41
+Algo : shortest_augmenting_path - Execute en 6.46
+---
+n= 500, m= 50
+Taux de reponses oui : 0.5
+Taux de reponses non : 0.5
+Algo : shortest_augmenting_path - Execute en 16.75
+---
+n= 700, m= 70
+Taux de reponses oui : 0.58
+Taux de reponses non : 0.42
+Algo : shortest_augmenting_path - Execute en 17.75
+---
+[100, 300, 500, 700]
+[1.8420755863189697, 6.457629442214966, 16.747952222824097, 17.749878883361816]

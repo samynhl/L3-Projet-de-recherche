@@ -17,8 +17,9 @@ import random
 import time
 
 def main():
+    f = open("opt/r7.txt","a")
     # Initialisations
-    n = 10000        # Nombre de taches
+    n = 1000        # Nombre de taches
     m = int(n*0.1)   # Nombre de machines
     tasks = ut.init(n,m)
     C = max([x+y+z for (x,y,z) in zip(tasks["ri"], tasks["qi"], tasks["pi"])])
@@ -76,14 +77,13 @@ def main():
         print("-------------------------------------------------------------------------")
 
         # Sauvegarde du résultat dans le fichier de sortie
-        with open("exemples.txt","a") as f:
-            f.write("C={}, n={}, m={}\n".format(C,n,m))
-            f.write("ri={}\n".format(tasks["ri"]))
-            f.write("di={}\n".format(tasks["di"]))
-            f.write("qi={}\n".format(tasks["qi"]))
-            f.write("pi={}\n".format(tasks["pi"]))
-            f.write("Probleme de decision : {}\n".format('Oui' if check else 'Non'))
-            f.write("-----------------------------------------------------------------------------\n")
+        f.write("C={}, n={}, m={}\n".format(C,n,m))
+        f.write("ri={}\n".format(tasks["ri"]))
+        f.write("di={}\n".format(tasks["di"]))
+        f.write("qi={}\n".format(tasks["qi"]))
+        f.write("pi={}\n".format(tasks["pi"]))
+        f.write("Probleme de decision : {}\n".format('Oui' if check else 'Non'))
+        f.write("-----------------------------------------------------------------------------\n")
         
         if check:
             bsup = C
@@ -100,5 +100,21 @@ def main():
     print("la valeur de C optimal: ", Copt)
     print("Trouvé en {} itérations".format(nb_iterations))
     print("Temps d'exécution : ",round(time.time()-tic,2))
+
+    # Sauvegarde du résultat dans le fichier de sortie
+    f.write("C={}, n={}, m={}\n".format(C,n,m))
+    f.write("ri={}\n".format(tasks["ri"]))
+    f.write("di={}\n".format(tasks["di"]))
+    f.write("qi={}\n".format(tasks["qi"]))
+    f.write("pi={}\n".format(tasks["pi"]))
+    f.write("Probleme de decision : {}\n".format('Oui' if check else 'Non'))
+    f.write("-----------------------------------------------------------------------------\n")
+    f.write("-----------------------------------------------------------------------------\n")
+    f.write(f'n= {n}, m= {m}\n')
+    f.write("la valeur de C optimal: {}\n".format(Copt))
+    f.write("Trouve en {} iterations\n".format(nb_iterations))
+    f.write("Temps d'execution : {}\n".format(round(time.time()-tic,2)))
+
+    f.close()
 
 main()

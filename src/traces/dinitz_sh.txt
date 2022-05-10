@@ -1,0 +1,25 @@
+n= 100, m= 10
+Taux de reponses oui : 0.55
+Taux de reponses non : 0.45
+Algo : dinitz - Execute en 5.23
+---
+n= 300, m= 30
+Taux de reponses oui : 0.59
+Taux de reponses non : 0.41
+Algo : dinitz - Execute en 46.61
+---
+n= 500, m= 50
+Taux de reponses oui : 0.5
+Taux de reponses non : 0.5
+Algo : dinitz - Execute en 103.62
+---
+n= 700, m= 70
+Taux de reponses oui : 0.58
+Taux de reponses non : 0.42
+Algo : dinitz - Execute en 199.26
+---
+n= 900, m= 90
+Taux de reponses oui : 0.58
+Taux de reponses non : 0.42
+Algo : dinitz - Execute en 326.42
+---

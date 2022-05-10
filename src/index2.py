@@ -29,7 +29,7 @@ def main():
     valeurs_n = []
     nb_test = 100
     f1 = open('instances.txt','r')
-    f2 = open('ek_sh.txt','a')
+    f2 = open('di_h.txt','a')
     for n in range(100, 800, 200):
         nb_oui, nb_non = 0,0
         duree = 0
@@ -57,14 +57,14 @@ def main():
             # ut.affichage(G)
             # Jackson heuristique
             
-            # G = ut.jackson_heur(G,tasks)
-            #weights,caps = nx.get_edge_attributes(G, 'weight'),nx.get_edge_attributes(G, 'capacity')
+            G = ut.jackson_heur(G,tasks)
+            weights,caps = nx.get_edge_attributes(G, 'weight'),nx.get_edge_attributes(G, 'capacity')
             
             R = build_residual_network(G, 'capacity')
             #affichage(G)
             tic = time.time()
             # Résolution du flot maximum
-            flow_value, flows = nx.maximum_flow(G, 's', 'p',flow_func=edmonds_karp,residual=R)
+            flow_value, flows = nx.maximum_flow(G, 's', 'p',flow_func=dinitz,residual=R)
             duree_total = sum(tasks["pi"])
             '''
             # Affichage du flot après résolution du flot maximum
@@ -88,13 +88,13 @@ def main():
         print(n,m)
         print("Taux de réponses oui : ",round(nb_oui/nb_test,2))
         print("Taux de réponses non : ",round(nb_non/nb_test,2))
-        print(f'Algo : edmonds_karp - Exécuté en {round(duree,2)} ')
+        print(f'Algo : dinitz - Exécuté en {round(duree,2)} ')
         print("---")
 
         f2.write(f'n= {n}, m= {m}\n')
         f2.write(f'Taux de reponses oui : {round(nb_oui/nb_test,2)}\n')
         f2.write(f'Taux de reponses non : {round(nb_non/nb_test,2)}\n')
-        f2.write(f'Algo : edmonds_karp - Execute en {round(duree,2)}\n')
+        f2.write(f'Algo : dinitz - Execute en {round(duree,2)}\n')
         f2.write("---\n")
     
     f2.write(f'{valeurs_n}\n')
@@ -106,9 +106,9 @@ def main():
     plt.plot(valeurs_n,exec_time)
     plt.xlabel('Nombre de taches n')
     plt.ylabel("Temps d'exécution")
-    plt.title('Algorithme de edmonds_karp sans heuristique de jackson') 
+    plt.title('Algorithme de dinitz avec heuristique de jackson') 
     #plt.show()
-    plt.savefig('ek_sh.png')
+    plt.savefig('di_h.png')
     # Affichage graphique du graphe obtenu
     # plot_graph(G)
 
